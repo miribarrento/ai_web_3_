@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI & Tech Chat</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        h2 { text-align: center; }
+        .message-container { width: 80%; margin: auto; }
+        .message { padding: 10px; margin-bottom: 10px; border-bottom: 1px solid #ddd; }
+        .bot { color: blue; font-weight: bold; }
+        .user { color: green; font-weight: bold; }
+        form { text-align: center; margin-top: 20px; }
+        input, button { padding: 10px; margin: 5px; }
+        button { background: #007BFF; color: white; border: none; cursor: pointer; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+
+    <h2>AI & Tech Chat</h2>
+
+    <div class="message-container">
+        {% for message in messages %}
+            <div class="message">
+                <span class="{% if message.sender == 'AIBot' %}bot{% else %}user{% endif %}">
+                    {{ message.sender }}:
+                </span>
+                {{ message.content }}
+                <small>({{ message.timestamp }})</small>
+            </div>
+        {% endfor %}
+    </div>
+
+    <h3>Send a Message</h3>
+    <form id="send-message-form">
+        <input type="text" id="sender" placeholder="Your Name" required>
+        <input type="text" id="content" placeholder="Your Message" required>
+        <button type="submit">Send</button>
+    </form>
+
+    <script>
+        document.getElementById("send-message-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const sender = document.getElementById("sender").value;
+            const content = document.getElementById("content").value;
+
+            fetch("/send", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "authkey 0987654321"
+                },
+                body: JSON.stringify({ sender: sender, content: content, timestamp: new Date().toISOString() })
+            }).then(response => {
+                if (response.ok) {
+                    alert("Message sent!");
+                    location.reload();  // Refresh the page to show new messages
+                } else {
+                    alert("Failed to send message.");
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
