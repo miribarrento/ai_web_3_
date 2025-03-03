@@ -16,7 +16,7 @@ HUB_AUTHKEY = 'Crr-K24d-2N'
 CHANNEL_AUTHKEY = '0987654321'
 CHANNEL_NAME = "AI & Tech Chat"  # New topic-based channel name
 CHANNEL_TOPIC = "Discuss AI, technology, and coding!"  # Topic description
-CHANNEL_ENDPOINT = "http://localhost:5001"
+CHANNEL_ENDPOINT = "http://vm146.rz.uni-osnabrueck.de/u035/channel.wsgi/"
 CHANNEL_FILE = 'messages.json'
 CHANNEL_TYPE_OF_SERVICE = 'aiweb24:chat'
 MESSAGE_LIMIT = 50  # Store only the last 50 messages
@@ -75,7 +75,7 @@ def save_messages(messages):
 def register_command():
     """Registers the channel with the hub."""
     response = requests.post(
-        HUB_URL + '/register',
+        HUB_URL + '/channels',
         headers={'Authorization': 'authkey ' + HUB_AUTHKEY},
         json={
             "name": CHANNEL_NAME,
@@ -98,7 +98,7 @@ def health_check():
         return "Invalid authorization", 400
     return jsonify({'name': CHANNEL_NAME}), 200
 
-# Home page (renders `home.html`)
+# Home page (renders home.html)
 @app.route("/", methods=["GET"])
 def home_page():
     return render_template("home.html")
@@ -172,5 +172,5 @@ def help_page():
     })
 
 # Run Flask server
-if __name__ == '__main__':
+if __name__ == '_main_':
     app.run(port=5001, debug=True)
